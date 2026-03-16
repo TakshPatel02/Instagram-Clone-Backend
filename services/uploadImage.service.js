@@ -10,17 +10,9 @@ const uploadImage = async (fileBuffer, fileName) => {
             ? fileBuffer.toString("base64")
             : fileBuffer;
 
-        const uploadFn = imagekit?.files?.upload || imagekit?.upload;
-
-        if (!uploadFn) {
-            throw new Error("Invalid ImageKit client: upload method not found");
-        }
-
-        const uploadContext = imagekit?.files?.upload ? imagekit.files : imagekit;
-
-        const response = await uploadFn.call(uploadContext, {
+        const response = await imagekit.files.upload({
             file: fileData,
-            fileName: fileName
+            fileName: fileName,
         });
 
         return {
