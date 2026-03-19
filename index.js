@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import connectDB from './connection.js';
 import postRouter from './routes/post.routes.js';
+import authRouter from './routes/auth.routes.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -21,5 +22,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/post', postRouter);
+app.use('/auth', authRouter);
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
