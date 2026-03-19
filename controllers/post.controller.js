@@ -1,5 +1,6 @@
 import uploadImage from "../services/uploadImage.service.js";
 import Post from "../models/post.model.js"
+import User from "../models/user.model.js";
 
 const createPost = async (req, res) => {
     try {
@@ -19,8 +20,13 @@ const createPost = async (req, res) => {
         );
 
         const post = await Post.create({
+            userId: req.user.id,
             postUrl: imageUpload.url,
             caption,
+        });
+
+        await User.findByIdAndUpdate(req.user.id, {
+            $push: { posts: post._id }
         });
 
         return res.status(201).json({
@@ -43,19 +49,17 @@ const createPost = async (req, res) => {
 }
 
 const getAllPosts = async (req, res) => {
-    try{
+    try {
         // -1 means sort in descending order (newest posts first)
-        const posts = await Post.find().sort({
-            createdAt: -1
-        });
+        const posts = await Post.find({ userId: req.user.id }).sort({ createdAt: -1 });f
 
         return res.status(200).json({
             success: true,
             message: 'Posts retrieved successfully',
             data: posts
         })
-        
-    } catch(err){
+
+    } catch (err) {
         console.error(err);
         res.status(500).json({
             success: false,

@@ -20,12 +20,16 @@ const userSchema = new Schema(
             required: true,
             unique: true
         },
-        // posts:[
-        //     {
-        //         type: Schema.Types.ObjectId,
-        //         ref: "Post"
-        //     }
-        // ],
+        refreshToken: {
+            type: String,
+            default: null
+        },
+        posts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Post"
+            }
+        ],
         // comments:[
         //     {
         //         type: Schema.Types.ObjectId,

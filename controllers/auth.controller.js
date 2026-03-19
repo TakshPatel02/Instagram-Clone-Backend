@@ -18,7 +18,7 @@ const signupUser = async (req, res) => {
             });
         }
 
-        const { username, email, password } = validatedData.data;
+        const { name,username, email, password } = validatedData.data;
 
         const existingUser = await User.findOne({ email });
 
@@ -32,6 +32,7 @@ const signupUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await User.create({
+            name,
             username,
             email,
             password: hashedPassword
@@ -39,6 +40,7 @@ const signupUser = async (req, res) => {
 
         const payload = {
             id: newUser._id,
+            name: newUser.name,
             username: newUser.username,
             email: newUser.email,
         }
@@ -109,6 +111,7 @@ const loginUser = async (req, res) => {
 
         const payload = {
             id: user._id,
+            name: user.name,
             username: user.username,
             email: user.email
         }
