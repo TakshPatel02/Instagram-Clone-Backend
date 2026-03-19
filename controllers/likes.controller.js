@@ -1,8 +1,8 @@
-import Post from "../models/post.model";
+import Post from "../models/post.model.js";
 
 const likes = async (req, res) => {
     try {
-        const { postId } = req.body;
+        const { postId } = req.params;
 
         const post = await Post.findById(postId);
 

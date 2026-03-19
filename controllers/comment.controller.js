@@ -1,6 +1,6 @@
-import Comment from "../models/comment.model";
-import Post from "../models/post.model";
-import commentSchema from "../validations/comment.validations";
+import Comment from "../models/comment.model.js";
+import Post from "../models/post.model.js";
+import commentSchema from "../validations/comment.validations.js";
 
 const createComment = async (req, res) => {
     try {
@@ -17,7 +17,8 @@ const createComment = async (req, res) => {
             });
         }
 
-        const { postId, commentText } = validatedData.data;
+        const { postId } = req.params;
+        const { commentText } = validatedData.data;
 
         const post = await Post.findById(postId);
 
