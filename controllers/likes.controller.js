@@ -39,6 +39,34 @@ const likes = async (req, res) => {
     }
 }
 
+const getLikesCount = async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: 'Post not found.'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            likesCount: post.likes.length
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: err.message || 'Internal Server Error'
+        })
+    }
+}
+
 export {
-    likes
+    likes,
+    getLikesCount
 }
