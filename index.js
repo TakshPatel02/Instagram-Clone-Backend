@@ -6,6 +6,7 @@ import postRouter from './routes/post.routes.js';
 import authRouter from './routes/auth.routes.js';
 import commentRouter from './routes/comment.routes.js';
 import likesRouter from './routes/likes.routes.js';
+import followersRouter from './routes/followers.routes.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -27,5 +28,6 @@ app.use('/post', postRouter);
 app.use('/auth', authRouter);
 app.use('/comment', commentRouter);
 app.use('/like', likesRouter);
+app.use('/follow', followersRouter);
 
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`));

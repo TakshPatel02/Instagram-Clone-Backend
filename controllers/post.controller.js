@@ -48,7 +48,7 @@ const createPost = async (req, res) => {
     }
 }
 
-const getAllPosts = async (req, res) => {
+const getAllUsersPosts = async (req, res) => {
     try {
         // -1 means sort in descending order (newest posts first)
         const posts = await Post.find({ userId: req.user.id }).sort({ createdAt: -1 });f
@@ -68,7 +68,27 @@ const getAllPosts = async (req, res) => {
     }
 }
 
+const getAllPosts = async (req, res) => {
+    try{
+        const posts = await Post.find().sort({createdAt: -1}).populate('userId', 'username');
+
+        return res.status(200).json({
+            success: true,
+            message: 'Posts retrieved successfully',
+            data: posts
+        })
+
+    } catch(err){
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: err.message || 'Internal Server Error'
+        })
+    }
+}
+
 export {
     createPost,
+    getAllUsersPosts,
     getAllPosts
 }
