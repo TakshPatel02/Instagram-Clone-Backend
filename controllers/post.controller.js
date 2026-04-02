@@ -1,6 +1,7 @@
 import uploadImage from "../services/uploadImage.service.js";
 import Post from "../models/post.model.js"
 import User from "../models/user.model.js";
+import Followers from "../models/followers.model.js";
 
 const createPost = async (req, res) => {
     try {
@@ -51,7 +52,7 @@ const createPost = async (req, res) => {
 const getAllUsersPosts = async (req, res) => {
     try {
         // -1 means sort in descending order (newest posts first)
-        const posts = await Post.find({ userId: req.user.id }).sort({ createdAt: -1 });f
+        const posts = await Post.find({ userId: req.user.id }).sort({ createdAt: -1 }); f
 
         return res.status(200).json({
             success: true,
@@ -69,8 +70,8 @@ const getAllUsersPosts = async (req, res) => {
 }
 
 const getAllPosts = async (req, res) => {
-    try{
-        const posts = await Post.find().sort({createdAt: -1}).populate('userId', 'username');
+    try {
+        const posts = await Post.find().sort({ createdAt: -1 }).populate('userId', 'username');
 
         return res.status(200).json({
             success: true,
@@ -78,7 +79,32 @@ const getAllPosts = async (req, res) => {
             data: posts
         })
 
-    } catch(err){
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            message: err.message || 'Internal Server Error'
+        })
+    }
+}
+
+const getPostsOfFollowing = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const following = await Followers.find({ follower: userId }).select('following');
+
+        const followingIds = following.map(f => f.following);
+
+        const posts = await Post.find({ userId: { $in: followingIds } }).sort({ createdAt: -1 }).populate('userId', 'username');
+
+        return res.status(200).json({
+            success: true,
+            message: 'Posts retrieved successfully',
+            data: posts
+        });
+
+    } catch (err) {
         console.error(err);
         res.status(500).json({
             success: false,
@@ -90,5 +116,6 @@ const getAllPosts = async (req, res) => {
 export {
     createPost,
     getAllUsersPosts,
-    getAllPosts
+    getAllPosts,
+    getPostsOfFollowing
 }
